@@ -1,0 +1,3 @@
+include ':kave'
+include ':app'
+rootProject.name = "Kave"
