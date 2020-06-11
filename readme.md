@@ -4,7 +4,7 @@
 <a href="https://jitpack.io/#Pidsamhai/Kave"> <img src="https://jitpack.io/v/Pidsamhai/Kave.svg" /></a>
 <a href="https://kotlinlang.org">&nbsp<img src="https://img.shields.io/badge/Kotlin-1.3.72-blue.svg" /> </a>
 <a href="https://github.com/Pidsamhai/Kave/blob/master/License.txt">&nbsp<img alt="GitHub" src="https://img.shields.io/github/license/Pidsamhai/Kave"></a>
-</p>>
+</p>
 
 ### Simple Bitmap extension
 
