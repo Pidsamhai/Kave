@@ -36,7 +36,6 @@ Permission AndroidManifest.xml
 ```text
 dependencies {
   implementation 'com.github.Pidsamhai:Kave:<latest-version>'
-  // This project uses kotlinx-coroutines.
 }
 ```
 
