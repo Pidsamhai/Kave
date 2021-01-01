@@ -8,10 +8,63 @@
 
 ### Simple Bitmap extension
 
-#### Save Bitmap to storage
+#### Save View to storage
+
+* init 
+* [Kave.Config](kave/src/main/java/com/github/psm/kave/Kave.kt)
 
 ```kotlin
-    bitmap.saveBitmap(this)
+class MyApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        val config = Kave.Config(
+            subLocation = "/SUBFOLDER/IMG",
+            compressFormat = Kave.Format.JPG,
+            fileNamePrefix = "MY_PREFIX",
+            compressValue = 20
+        )
+        Kave.init(applicationContext, config)
+    }
+}
+```
+
+* use 
+
+```kotlin
+class MainActivity : AppCompatActivity(), Kave.OnSaveCallback {
+
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    @SuppressLint("MissingPermission")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+        binding.img1.setImageResource(R.drawable.ic_dinosaur)
+        binding.btnSave.setOnClickListener {
+            binding.content.saveImage(callback = this)
+        }
+    }
+
+    override fun onComplete(path: String) {
+        binding.textView.text = path
+    }
+
+    override fun onSuccess(uri: Uri, path: String) {
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onError(e: Exception) {
+        Toast.makeText(this@MainActivity, e.message, Toast.LENGTH_SHORT).show()
+    }
+}
+```
+
+* custom Image Type
+
+```kotlin
+binding.content.saveImage(format = Kave.Format.PNG)
 ```
 
 ## Jitpack
@@ -41,7 +94,17 @@ dependencies {
 
 #### Support API >= 23
 
+#### Reference
+
+* [Android 11 Scoped Storage - Saving Files To Shared Storage](https://androidexplained.github.io/android/android11/scoped-storage/2020/09/29/file-saving-android-11.html)
+
 ### Changelog
+
+#### 0.0.1
+
+* android 11 (R) support
+* deprecate saveBitmap
+* upgrade dependencies
 
 ####  0.0.1-alpha
 

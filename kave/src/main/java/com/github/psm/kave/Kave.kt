@@ -11,12 +11,15 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
 import java.util.*
+import android.view.View
 
 
 private const val TAG = "Kave"
@@ -29,7 +32,9 @@ private const val TAG = "Kave"
  * @param compressFormat default PNG [Bitmap.CompressFormat.PNG]
  * @param quality bitmap compress quality default 80
  * @param callback [Kave.OnSaveCallback]
+ * @deprecated use [View.saveImage]
  */
+@Deprecated("migrate to View.saveImage()")
 @RequiresPermission(allOf = [Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE])
 fun Bitmap.saveBitmap(
     context: Context,
@@ -59,6 +64,7 @@ fun Bitmap.saveBitmap(
             quality,
             callback
         )
+        else -> Toast.makeText(context, "Not Supported", Toast.LENGTH_LONG).show()
     }
 }
 
@@ -140,12 +146,42 @@ private fun getType(format: Bitmap.CompressFormat): String {
         Bitmap.CompressFormat.JPEG -> "jpg"
         Bitmap.CompressFormat.PNG -> "png"
         Bitmap.CompressFormat.WEBP -> "webp"
+        else -> ""
     }
 }
 
 class Kave {
+
     interface OnSaveCallback {
         fun onComplete(path: String)
+        fun onSuccess(uri: Uri, path: String) = Unit
         fun onError(e: Exception)
+    }
+
+    /**
+     * @param subLocation Default Pictures folder
+     * @param compressFormat [Format] default [Format.PNG]
+     * @param compressValue value of compress 0 - 100 default 100
+     * @param fileNamePrefix file name prefix default IMG_XXXXX
+     */
+    data class Config(
+        val subLocation: String? = null,
+        val compressFormat: String = Format.PNG,
+        val compressValue: Int = 100,
+        val fileNamePrefix: String? = null
+    )
+
+    object Format {
+        const val PNG = "png"
+        const val JPG = "jpg"
+        const val WEBP = "webp"
+        @RequiresApi(Build.VERSION_CODES.R)
+        const val WEBP_LOSSLESS = "webp_lossless"
+        @RequiresApi(Build.VERSION_CODES.R)
+        const val WEBP_LOSSY = "webp_lossy"
+    }
+
+    companion object {
+        fun init(context: Context, config: Config) = KavePrefUtils.init(context, config)
     }
 }

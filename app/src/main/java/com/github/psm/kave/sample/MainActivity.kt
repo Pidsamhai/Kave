@@ -1,39 +1,38 @@
 package com.github.psm.kave.sample
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toBitmap
 import com.github.psm.kave.Kave
-import com.github.psm.kave.saveBitmap
-import kotlinx.android.synthetic.main.activity_main.*
+import com.github.psm.kave.sample.databinding.ActivityMainBinding
+import com.github.psm.kave.saveImage
 import java.util.*
 
 class MainActivity : AppCompatActivity(), Kave.OnSaveCallback {
+
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        img1.setImageResource(R.drawable.ic_dinosaur)
-        btn_save.setOnClickListener {
-            val bitmap =
-                ResourcesCompat.getDrawable(resources, R.drawable.ic_dinosaur, null)?.toBitmap()
-            bitmap?.saveBitmap(
-                this@MainActivity,
-                callback = this@MainActivity,
-                fileName = "PreFix${Date().time}",
-                subLocation = "Invoice",
-                compressFormat = Bitmap.CompressFormat.WEBP
-            )
+        setContentView(binding.root)
+        binding.img1.setImageResource(R.drawable.ic_dinosaur)
+        binding.btnSave.setOnClickListener {
+            binding.content.saveImage(callback = this)
         }
-
     }
 
     override fun onComplete(path: String) {
-        textView.text = path
+        binding.textView.text = path
+    }
+
+    override fun onSuccess(uri: Uri, path: String) {
+        binding.textView.text = path
+        Toast.makeText(this, path, Toast.LENGTH_SHORT).show()
     }
 
     override fun onError(e: Exception) {
