@@ -100,6 +100,10 @@ dependencies {
 
 ### Changelog
 
+#### 1.0.0
+
+* fix missing sdk check
+
 #### 0.0.1
 
 * android 11 (R) support
