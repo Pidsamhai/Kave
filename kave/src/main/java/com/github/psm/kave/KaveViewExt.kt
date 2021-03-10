@@ -28,9 +28,10 @@ private const val TAG = "Kave"
  */
 @RequiresPermission(allOf = [Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE])
 fun View.saveImage(format: String? = null, callback: Kave.OnSaveCallback? = null) {
-    when (Build.VERSION.SDK_INT) {
-        Build.VERSION_CODES.Q -> saveImageR(this, format, callback)
-        in Build.VERSION_CODES.M..Build.VERSION_CODES.P -> saveImageM(this, format, callback)
+    val version = Build.VERSION.SDK_INT
+    when {
+        (version >= Build.VERSION_CODES.Q)  -> saveImageR(this, format, callback)
+        (Build.VERSION_CODES.M..Build.VERSION_CODES.P).contains(version) -> saveImageM(this, format, callback)
     }
 }
 
